@@ -5,6 +5,7 @@ const colors = require("colors");
 const dotenv = require("dotenv").config();
 const { errorHandler } = require("./middleware/errorMiddleware");
 const connectDB = require("./config/db");
+const res = require("express/lib/response");
 
 //* configuration
 const port = process.env.PORT || 3001;
@@ -20,7 +21,7 @@ app.use("/api/goals", require("./routes/goalRoutes.js"));
 app.use("/api/users", require("./routes/userRoutes.js"));
 
 //* Serve frontend
-if (procewss.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/build"))); // __dirname = current directory
 
   app.get("*", (req, res) =>
@@ -28,6 +29,8 @@ if (procewss.env.NODE_ENV === "production") {
       path.resolve(__dirname, "../", "frontend", "build", "index.html")
     )
   ); // point all routes (besides API routes) to index.html
+} else {
+  app.get("/", (req, res) => res.send("Please set to production"));
 }
 
 //* error middleware
